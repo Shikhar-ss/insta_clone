@@ -1,32 +1,55 @@
 import React, { Component } from "react";
 import "./Post.css";
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
 
-class Post extends Component {
-  state = {};
-  render() {
-    const { nickname, avatar, image, caption } = this.props;
-    return (
-      <article className="Post" ref="Post">
-        <header>
-          <div className="Post-user">
-            <div className="Post-user-avatar">
-              <img src={avatar} alt={nickname} />
+const Post = () => {
+  return (
+    <Query
+      query={gql`
+        {
+          post(user_id: "a", post_id: "a") {
+            image
+            caprtion
+            user {
+              nickname
+              avatar
+            }
+          }
+        }
+      `}
+    >
+      {({ loading, error, data }) => {
+        if (loading) return <p>Loading Post...</p>;
+        if (error) return <p>Error Loading Post :( </p>;
+        let image = data.post.image;
+        let caption = data.post.caption;
+        let user = data.post.user;
+        return (
+          <article className="Post" ref="Post">
+            <header>
+              <div className="Post-user">
+                <div className="Post-user-avatar">
+                  <img src={user.avatar} alt={user.nickname} />
+                </div>
+                <div className="Post-user-nickname">
+                  <span>{user.nickname}</span>
+                </div>
+              </div>
+            </header>
+            <div className="Post-image">
+              <div className="Post-image-bg">
+                <img alt={caption} src={image} />
+              </div>
             </div>
-            <div className="Post-user-nickname">
-              <span>{nickname}</span>
+            <div className="Post-caption">
+              <strong>{}</strong> {user.nickname}
             </div>
-          </div>
-        </header>
-        <div className="Post-image">
-          <div className="Post-image-bg">
-            <img alt={caption} src={image} />
-          </div>
-        </div>
-        <div className="Post-caption">
-          <strong>{nickname}</strong> {caption}
-        </div>
-      </article>
-    );
-  }
-}
+          </article>
+        );
+      }}
+    </Query>
+  );
+};
+
 export default Post;
