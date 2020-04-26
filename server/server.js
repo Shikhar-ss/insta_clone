@@ -78,11 +78,7 @@ let root = {
   },
 };
 
-let app = express();{
-  user(id: "a"){
-    nickname,
-  }
-}
+let app = express();
 app.use(cors());
 app.use(
   "/graphql",
